@@ -1,0 +1,1329 @@
+﻿<ManuScript>
+  <properties manuscriptID="Carrier_ProductBase_PersonalAuto_1_0_0_0" versionID="Carrier_ProductBase_PersonalAuto" versionDate="2009-03-13" version="1" boolean="1" fieldCache="1" shortCircuitCond="1" cultureCode="en-US" cultureName="United States [english]" caption="Personal Auto (1.0.0.0)" inherited="DCT_Marketplace_PersonalAuto_1_0_0_0" image="" dataSchema="" usePersistedState="0">
+    <notes />
+    <keys>
+      <keyInfo name="family" value="Marketplace" />
+      <keyInfo name="lob" value="PersonalAuto" />
+      <keyInfo name="state" value="US" />
+      <keyInfo name="version" value="1.0.0.0" />
+      <keyInfo name="effectiveDateNew" value="2009-01-01" />
+      <keyInfo name="effectiveDateRenewal" value="2009-01-01" />
+      <keyInfo name="masterID" value="None" />
+      <keyInfo name="productCode" value="Pages" />
+    </keys>
+    <contexts inherited="DCT_ProductBase_1_0_0_0" />
+  </properties>
+  <model>
+    <object id="data" abstract="1">
+      <table id="Billing" tableType="local" separator="," override="1">
+        <fields>
+          <field type="int" name="Value" />
+        </fields>
+        <rowKeys name="Value" type="string" find="eq">
+          <key value="Included" />
+          <key value="BaseManuScriptID" />
+          <key value="WorkflowManuScriptID" />
+          <key value="InstallmentScheduleManuScriptID" />
+        </rowKeys>
+        <data>
+          <row value="0" />
+          <row value="Carrier_ProductBaseWithBilling_1_0_0_0" />
+          <row value="Carrier_BillingProductBase_Workflow_1_0_0_0" />
+          <row value="Carrier_Billing_Installment_Schedule_1_0_0_0" />
+        </data>
+      </table>
+      <object id="Policy" abstract="1">
+        <object id="Line" abstract="1">
+          <object id="Driver" abstract="1">
+            <object id="DriverInput" abstract="1">
+              <public id="DriverInput.DateOfBirth" path="BirthDate" type="date" override="1">
+                <definition>
+                  <caption value="Date Of Birth" />
+                  <maxLength idref="MaxLength.Date" />
+                  <required idref="True" />
+                  <formatMask idref="FormatMask.Date" />
+                </definition>
+                <rules>
+                  <default idref="DefaultFields.DateOfBirthDefault" />
+                  <value idref="AccountInput.BirthDate" />
+                </rules>
+              </public>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+  </model>
+  <topics>
+    <topic name="Consumer" abstract="1">
+      <page name="DriverHistory" pageVersion="2.0" prevPage="Driver" caption="Driver History" override="1" validRef="False">
+        <group iterMax="*" iterStep="1" object="Line">
+          <section direction="down" captionPosition="before" showCaption="repeat">
+            <section direction="down" captionPosition="above" showCaption="repeat">
+              <reference idref="LineInputNonShredded.AnyViolations" onBlur="1" capClass="x_Width550" />
+            </section>
+            <section direction="down" captionPosition="before" showCaption="repeat" validRef="LinePrivate.ShowViolations" class="x_SectionTopBorderSeparator">
+              <reference idref="Spacer" caption="Add up to four incidents for your drivers. If you have more than four incidents, please call one of our agents to complete your quote." capClass="x_Width700" />
+              <section direction="across" captionPosition="before" showCaption="repeat" actClass="x_FloatRight">
+                <action command="custom" displayType="hyperlink" caption="Add Accident/Violation" actClass="x_Bold x_Italic" validRef="DriverHistoryPage.ShowViolationAdd_Consumer">
+                  <nameValues>
+                    <nameValue value="add.png" name="icon" />
+                  </nameValues>
+                  <request verb="ManuScript.addObjectRecordRq">
+                    <nameValues>
+                      <nameValue idref="PolicyAdmin.PolicyManuScriptID" name="manuscript" dataType="attribute" />
+                      <nameValue value="Violation" name="objectID" dataType="attribute" />
+                    </nameValues>
+                  </request>
+                </action>
+              </section>
+              <group object="Violation" iterMax="*" iterStep="1">
+                <section direction="down" captionPosition="before" showCaption="repeat" tabs="1">
+                  <section direction="down" captionPosition="before" showCaption="repeat" tab="1">
+                    <tableLayout direction="down" captionPosition="before" showCaption="repeat">
+                      <section direction="across" captionPosition="before" showCaption="none" actClass="x_FloatRight">
+                        <action command="delete" caption="Delete Incident" displayType="action" validRef="AllPage.NotReadOnly">
+                          <nameValues>
+                            <nameValue value="gray" name="type" />
+                            <nameValue value="cross.png" name="icon" />
+                          </nameValues>
+                        </action>
+                      </section>
+                      <section direction="down" captionPosition="before" showCaption="repeat" class="x_RightAlignFieldCaptions">
+                        <reference idref="ViolationInput.Category" onBlur="1" />
+                        <reference idref="ViolationInput.ViolationDescription">
+                          <nameValues />
+                        </reference>
+                        <reference idref="ViolationInput.PlaceOfAccidentConviction">
+                          <nameValues>
+                            <nameValue idref="ViolationPrivate.HideViolationPlace" name="eliminate" />
+                          </nameValues>
+                        </reference>
+                        <reference idref="ViolationInput.Date">
+                          <nameValues />
+                        </reference>
+                        <reference idref="ViolationInput.PropertyDamageAmount">
+                          <nameValues>
+                            <nameValue idref="ViolationPrivate.HidePropertyDamageAmount" name="eliminate" />
+                          </nameValues>
+                        </reference>
+                        <reference idref="ViolationInput.DriverID" onBlur="1" compute="1">
+                          <nameValues />
+                        </reference>
+                        <reference idref="ViolationInput.AnyBodilyInjury">
+                          <nameValues>
+                            <nameValue idref="ViolationPrivate.HideAnyBodilyInjury" name="eliminate" />
+                          </nameValues>
+                        </reference>
+                      </section>
+                    </tableLayout>
+                    <nameValues>
+                      <nameValue idref="ViolationOutputNonShredded.IncidentNumberCaption" name="toggleCaption" />
+                    </nameValues>
+                  </section>
+                  <nameValues />
+                </section>
+              </group>
+              <nameValues />
+            </section>
+            <nameValues />
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="DriverHistoryPage.ReadOnly" name="readOnly" />
+          <nameValue idref="True" name="hideAnnotations" />
+        </nameValues>
+      </page>
+    </topic>
+    <topic name="QuickQuote" abstract="1">
+      <page name="QuickQuote" caption="Quick Quote" prevPage="" pageVersion="2.0" override="1">
+        <group object="data" iterMax="*" iterStep="1">
+          <section direction="across" captionPosition="before" showCaption="repeat">
+            <group iterMax="*" iterStep="1" object="Account">
+              <section direction="across" captionPosition="before" showCaption="repeat" collapsible="1">
+                <section direction="across" captionPosition="before" showCaption="repeat" capClass="x_Width100">
+                  <reference idref="AccountInput.FirstName" hoverHelp="1" />
+                  <action command="custom" validRef="AccountPage.ManualPartySearch_Show" displayType="hyperlink">
+                    <nameValues>
+                      <nameValue value="partyStart:partySearch" name="postAction" />
+                      <nameValue value="Party Search" name="popUpTitle" />
+                      <nameValue value="800" name="popUpWidth" />
+                      <nameValue value="600" name="popUpHeight" />
+                      <nameValue value="loneIcon" name="type" />
+                      <nameValue value="magnifier.png" name="icon" />
+                      <nameValue value="Search" name="qtip" />
+                      <nameValue value="1" name="_performStoreData" />
+                      <nameValue value="1" name="popUp" />
+                      <nameValue value="1" name="hideCloseButton" />
+                      <nameValue value="partyAttach" name="PartyReturnAction" />
+                      <nameValue value="AccountPrivate.PartyImportAccountEmail" name="FieldsToExecuteOnSelect" />
+                    </nameValues>
+                  </action>
+                  <action command="custom" validRef="AccountPage.AutomaticPartySearch_Show" displayType="hyperlink">
+                    <nameValues>
+                      <nameValue value="partyStart:searchResults" name="postAction" />
+                      <nameValue value="Auto Search" name="popUpTitle" />
+                      <nameValue value="800" name="popUpWidth" />
+                      <nameValue value="500" name="popUpHeight" />
+                      <nameValue value="1" name="_performStoreData" />
+                      <nameValue value="_partyReturnAction,partyAttach,_mappingId,PartySearch" name="ExpressActionParameters" />
+                      <nameValue value="loneIcon" name="type" />
+                      <nameValue value="magnifier.png" name="icon" />
+                      <nameValue value="Search" name="qtip" />
+                      <nameValue value="1" name="popUp" />
+                      <nameValue value="1" name="hideCloseButton" />
+                    </nameValues>
+                  </action>
+                </section>
+                <nameValues>
+                  <nameValue value="Application Information" name="toggleCaption" />
+                </nameValues>
+                <section direction="across" captionPosition="before" showCaption="repeat" capClass="x_Width100">
+                  <reference idref="AccountInput.LastName" compute="1" hoverHelp="1" />
+                  <reference idref="AccountInput.BirthDate" />
+                  <section direction="across" captionPosition="before" showCaption="repeat">
+                    <reference idref="AccountInput.ZipCode" onBlur="1" capClass="x_Width100" />
+                    <reference idref="AccountInput.PrimaryPhone" />
+                    <reference idref="AccountInput.Email" fldClass="x_InputWidth200">
+                      <nameValues />
+                    </reference>
+                  </section>
+                </section>
+                <tableLayout direction="down" captionPosition="before" showCaption="once">
+                  <reference idref="AccountInput.Address1" />
+                </tableLayout>
+              </section>
+            </group>
+            <nameValues />
+            <group iterMax="*" iterStep="1" object="Policy">
+              <section direction="down" captionPosition="before" showCaption="repeat">
+                <group iterMax="*" iterStep="1" object="Line">
+                  <section direction="down" captionPosition="before" showCaption="repeat">
+                    <section direction="down" captionPosition="before" showCaption="repeat" collapsible="1">
+                      <group iterMax="*" iterStep="1" object="Driver">
+                        <tableLayout direction="across" captionPosition="above" showCaption="once" readOnly="0" capClass="x_Bold" class="x_GrayBorders">
+                          <nameValues />
+                          <reference idref="DriverInput.FirstName" fldClass="x_InputWidth200">
+                            <nameValues />
+                          </reference>
+                          <reference idref="DriverInput.LastName" fldClass="x_InputWidth200">
+                            <nameValues />
+                          </reference>
+                          <reference idref="DriverInput.Gender" onBlur="1" fldClass="x_Width75" />
+                          <reference idref="DriverInput.DateOfBirth" onBlur="1" />
+                          <reference idref="DriverInput.MaritalStatus" onBlur="1" />
+                          <action command="specificIter" caption="Details" pageRef="QuickQuoteDriver" topic="QuickQuoteDriver" displayType="hyperlink">
+                            <nameValues>
+                              <nameValue name="popUp" value="1" />
+                              <nameValue value="1" name="ignoreValidation" />
+                              <nameValue value="pencil.png" name="icon" />
+                              <nameValue value="loneIcon" name="type" />
+                              <nameValue value="1" name="hideCloseButton" />
+                            </nameValues>
+                          </action>
+                          <action command="delete" preCommand="DriverAssignment.ClearDriverAssignment" displayType="hyperlink" caption="Delete">
+                            <nameValues>
+                              <nameValue value="loneIcon" name="type" />
+                              <nameValue value="cross.png" name="icon" />
+                            </nameValues>
+                          </action>
+                        </tableLayout>
+                        <action command="add" caption="Add Driver">
+                          <nameValues />
+                        </action>
+                      </group>
+                      <nameValues>
+                        <nameValue value="Drivers" name="toggleCaption" />
+                      </nameValues>
+                    </section>
+                    <section direction="down" captionPosition="before" showCaption="repeat" collapsible="1" captionClass="x_BackgroundMediumBlue">
+                      <group iterMax="*" iterStep="1" object="Risk">
+                        <tableLayout direction="across" captionPosition="above" readOnly="0" showCaption="once" class="x_GrayBorders" capClass="x_Bold">
+                          <nameValues />
+                          <reference idref="VehicleInput.Year" onBlur="1" fldClass="x_Width75" />
+                          <reference idref="VehicleInput.Make" onBlur="1" fldClass="x_Width200" />
+                          <reference idref="VehicleInput.Model" onBlur="1" fldClass="x_Width200" />
+                          <reference idref="VehicleInput.Description" onBlur="1" fldClass="x_Width200" />
+                          <action command="specificIter" caption="Details" pageRef="QuickQuoteVehicle" topic="QuickQuoteVehicle" displayType="hyperlink">
+                            <nameValues>
+                              <nameValue name="popUp" value="1" />
+                              <nameValue value="1" name="ignoreValidation" />
+                              <nameValue value="loneIcon" name="type" />
+                              <nameValue value="pencil.png" name="icon" />
+                              <nameValue value="1" name="hideCloseButton" />
+                            </nameValues>
+                          </action>
+                          <action command="delete" displayType="hyperlink" caption="Delete">
+                            <nameValues>
+                              <nameValue value="loneIcon" name="type" />
+                              <nameValue value="cross.png" name="icon" />
+                            </nameValues>
+                          </action>
+                        </tableLayout>
+                        <action command="add" caption="Add Vehicle">
+                          <nameValues />
+                        </action>
+                      </group>
+                      <nameValues>
+                        <nameValue value="Vehicles" name="toggleCaption" />
+                      </nameValues>
+                    </section>
+                    <section direction="down" captionPosition="before" showCaption="repeat" collapsible="1">
+                      <tableLayout direction="across" captionPosition="before" showCaption="repeat">
+                        <tableLayout direction="down" captionPosition="above" showCaption="repeat" capClass="x_Bold">
+                          <nameValues />
+                          <reference idref="CoveragePackageDefaults.SetCurrentValues" compute="1" />
+                          <widget widgetType="comparison" showCaption="repeat" widgetFormat="slider" formatMaskOverride="$???,???,???.00" idref="CoveragePackage.Value" affectedRatingRef="CoveragePackage.ExecuteQuickQuote" affectedValueRef="data.TotalPremiumChange" onBlur="1" class="x_Bold x_PaddingBottom20 x_PaddingLeft10" caption=" " />
+                        </tableLayout>
+                        <tableLayout direction="down" captionPosition="before" showCaption="repeat" cellStyle="x_GrayBorders">
+                          <reference idref="BodilyInjuryInput.Limit" onBlur="1" fldClass="x_InputWidth200" />
+                          <reference idref="PropertyDamageInput.Limit" onBlur="1" />
+                          <reference idref="MedicalPaymentsInput.Limit" onBlur="1" />
+                          <reference idref="UninsuredMotoristsInput.Limit" onBlur="1" fldClass="x_InputWidth200" />
+                          <nameValues>
+                            <nameValue idref="CoveragePackagePrivate.IsNotCustom" name="readOnly" />
+                          </nameValues>
+                          <reference idref="UnderInsuredMotoristsInput.Limit" />
+                        </tableLayout>
+                      </tableLayout>
+                      <section direction="down" captionPosition="before" showCaption="repeat" caption="VEHICLE COVERAGE" />
+                      <group iterMax="*" iterStep="1" object="Risk">
+                        <tableLayout direction="across" captionPosition="above" showCaption="once" readOnly="0" class="x_GrayBorders" capClass="x_Bold">
+                          <reference idref="VehicleOutputNonShredded.YearMakeDisplay" caption=" Vehicle" compute="1" fldClass="x_Width175">
+                            <nameValues />
+                          </reference>
+                          <reference idref="VehicleInputNonShredded.LiabilityOnly" onBlur="1" fldClass="x_Width50" compute="1">
+                            <nameValues>
+                              <nameValue idref="CoveragePackagePrivate.IsLiability" name="readOnly" />
+                            </nameValues>
+                          </reference>
+                          <reference idref="OtherThanCollisionInput.Deductible" onBlur="1" caption="Comprehensive" compute="1" />
+                          <reference idref="CollisionInput.Deductible" onBlur="1" compute="1" />
+                          <reference idref="TowingAndLaborInput.Limit" onBlur="1" compute="1">
+                            <nameValues />
+                          </reference>
+                          <reference idref="RentalReimbursementInput.Limit" onBlur="1" compute="1">
+                            <nameValues />
+                          </reference>
+                          <nameValues>
+                            <nameValue idref="CoveragePackagePrivate.IsNotCustom" name="readOnly" />
+                          </nameValues>
+                        </tableLayout>
+                      </group>
+                      <nameValues>
+                        <nameValue value="Coverage" name="toggleCaption" />
+                      </nameValues>
+                    </section>
+                    <section direction="across" captionPosition="before" showCaption="repeat" collapsible="1">
+                      <reference idref="PolicyInput.Homeowner" onBlur="1" caption="Do you have a Personal Homeowner insurance policy with our company?" hoverHelp="1" />
+                      <nameValues>
+                        <nameValue value="Discounts" name="toggleCaption" />
+                      </nameValues>
+                    </section>
+                    <nameValues />
+                  </section>
+                </group>
+              </section>
+            </group>
+            <section direction="down" captionPosition="before" readOnly="1" validRef="LinePrivate.AnyVehicles" showCaption="repeat" collapsible="1">
+              <reference idref="data.TotalPremiumWritten" compute="1" caption="Your premium could be as low as:" capClass="x_Bold x_Italic x_FontLarge x_Width350" fldClass="x_Bold x_Italic x_FontLarge">
+                <nameValues />
+              </reference>
+              <nameValues>
+                <nameValue value="Quote" name="toggleCaption" />
+              </nameValues>
+            </section>
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="True" name="hideAnnotations" />
+          <nameValue idref="False" name="calculate" />
+        </nameValues>
+      </page>
+    </topic>
+    <topic name="MainInterview" abstract="1">
+      <page pageVersion="2.0" name="InsuranceHistory" caption="Insurance History" prevPage="Underwriting" validRef="False" override="1">
+        <group object="Policy" iterMax="*" iterStep="1">
+          <section direction="down" captionPosition="before" showCaption="repeat" caption="Insurance History" cc="GrayPanel" icon="report.png">
+            <reference idref="Spacer" caption="Please list prior insurance" capClass="x_FontCaption" />
+            <group iterMax="*" iterStep="1" object="PriorInsurance">
+              <section direction="across" captionPosition="above" showCaption="repeat" class="x_GrayBorders" capClass="x_Bold">
+                <reference idref="PriorInsurance.CarrierName" fldClass="x_Width200" />
+                <reference idref="PriorInsurance.EffectiveDate" />
+                <reference idref="PriorInsurance.ExpirationDate" />
+                <nameValues />
+                <reference idref="PriorInsurance.PolicyNumber" fldClass="x_Width150" />
+                <action command="delete" caption="Delete">
+                  <nameValues />
+                </action>
+              </section>
+              <action command="add" caption="Add Carrier" validRef="LockPolicy.False">
+                <nameValues />
+              </action>
+            </group>
+            <nameValues />
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="InsuranceHistoryPage.ReadOnly" name="readOnly" />
+        </nameValues>
+      </page>
+      <page name="ClaimsHistory" caption="Claims History" pageVersion="2.0" validRef="False" override="1" prevPage="InsuranceHistory">
+        <group object="Line" iterMax="*" iterStep="1">
+          <section direction="down" captionPosition="before" showCaption="repeat" cc="GrayPanel" caption="Claims History" icon="report.png">
+            <tableLayout direction="down" captionPosition="above" showCaption="repeat" uid="t_l5C970B41454544308D62F2F3C6B3D1AF2_3" class="x_Information">
+              <reference idref="Spacer" caption="Any prior losses, whether paid or not paid by insurance over the last 5 years at this location or any other location." />
+            </tableLayout>
+            <section direction="down" captionPosition="before" showCaption="repeat">
+              <group iterMax="*" iterStep="1" object="Loss">
+                <grid direction="across" captionPosition="above" showCaption="once" validRef="LinePrivate.ShowLossInformation" capClass="x_Bold" class="x_GrayBorders" readOnly="1">
+                  <reference idref="LossInput.LossType" capClass="x_Width200" caption="Claim Type" />
+                  <reference idref="LossInput.DateOfLoss" capClass="x_Width90" caption="Claim Date" />
+                  <reference idref="LossInput.AmountPaid" fldClass="x_TextAlignRight" capClass="x_Width90 x_TextAlignCenter" />
+                  <reference idref="LossInput.Description" fldClass="x_InputWidth200" />
+                  <nameValues />
+                  <reference idref="LossInput.Source">
+                    <nameValues>
+                      <nameValue idref="True" name="readOnly" />
+                    </nameValues>
+                  </reference>
+                  <reference idref="LossInput.Disputed" caption="Dispute Claim" />
+                  <action command="delete" caption="Delete" validRef="LossPrivate.IsManual">
+                    <nameValues />
+                  </action>
+                  <action command="specificIter" caption="Detail" pageRef="LossDetail" topic="LossDetail">
+                    <nameValues>
+                      <nameValue value="1" name="popUp" />
+                    </nameValues>
+                  </action>
+                </grid>
+                <action command="add" caption="Add Claim" pageRef="LossDetail" topic="LossDetail">
+                  <nameValues>
+                    <nameValue value="1" name="popUp" />
+                  </nameValues>
+                </action>
+                <action command="custom" caption="Get CLUE Information" validRef="CLUERequest.ShowCLUE" pageRef="OrderCLUE" topic="OrderCLUE">
+                  <nameValues>
+                    <nameValue idref="CLUERequest.CLUEManuscriptID" name="manuscript" />
+                    <nameValue value="1" name="popUp" />
+                  </nameValues>
+                </action>
+                <action command="goto" caption="Match Losses" preCommand="LossMatching.MatchLosses" pageRef="LossMatchingDetail" topic="LossMatchingDetail" validRef="CLUERequest.ShowMatchLoss">
+                  <nameValues>
+                    <nameValue value="1" name="popUp" />
+                    <nameValue value="800" name="popUpWidth" />
+                    <nameValue value="800" name="popUpHeight" />
+                    <nameValue idref="CLUERequest.CLUEManuscriptID" name="manuscript" />
+                  </nameValues>
+                </action>
+              </group>
+              <section direction="across" captionPosition="before" showCaption="repeat" validRef="CLUERequest.NoCLUELoss">
+                <reference idref="Spacer" caption="No CLUE information found" />
+              </section>
+              <section direction="across" captionPosition="before" showCaption="repeat" validRef="DateToReorderCLUE.ShowDateToReorder" readOnly="1">
+                <reference idref="DateToReorderCLUE.OrderedDate">
+                  <nameValues />
+                </reference>
+                <reference idref="DateToReorderCLUE.DateAvailableForReOrder" />
+              </section>
+            </section>
+            <nameValues />
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="ClaimsHistoryPage.ReadOnly" name="readOnly" />
+        </nameValues>
+      </page>
+      <page name="AdditionalOtherInterests" caption="Additional Interests" pageVersion="2.0" validRef="False" override="1" prevPage="Endorsements">
+        <group object="Account" iterMax="*" iterStep="1">
+          <section direction="down" captionPosition="before" showCaption="once" cc="GrayPanel" icon="user.png" caption="Additional Interests">
+            <group iterMax="*" iterStep="1" object="AdditionalOtherInterest">
+              <grid direction="across" captionPosition="above" showCaption="once" readOnly="1">
+                <reference idref="AdditionalOtherInterestInput.Name" />
+                <reference idref="AdditionalOtherInterestInput.Type" />
+                <reference idref="AdditionalOtherInterestInput.Address1" />
+                <reference idref="AdditionalOtherInterestInput.Address2" />
+                <reference idref="AdditionalOtherInterestInput.City" />
+                <reference idref="AdditionalOtherInterestInput.State" />
+                <reference idref="AdditionalOtherInterestInput.ZipCode" />
+                <action command="specificIter" caption="Details" pageRef="AdditionalOtherInterestDetail" topic="AdditionalOtherInterestDetail" preCommand="AdditionalOtherInterestDetailPage.SetPageToAddlOtherInterest">
+                  <nameValues>
+                    <nameValue value="1" name="popUp" />
+                    <nameValue value="Additional Other Interest Detail" name="popUpTitle" />
+                    <nameValue value="800" name="popUpWidth" />
+                    <nameValue value="800" name="popUpHeight" />
+                  </nameValues>
+                  <request verb="Session.beginTransactionRq" />
+                </action>
+                <action command="delete" validRef="LockPolicy.False" caption="Delete">
+                  <nameValues />
+                </action>
+              </grid>
+              <action command="add" caption="Add Additional Other Interest" pageRef="AdditionalOtherInterestDetail" topic="AdditionalOtherInterestDetail" validRef="LockPolicy.False" preCommand="AdditionalOtherInterestDetailPage.SetPageToAddlOtherInterest">
+                <nameValues>
+                  <nameValue value="1" name="popUp" />
+                  <nameValue value="Additional Other Interest Detail" name="popUpTitle" />
+                  <nameValue value="800" name="popUpWidth" />
+                  <nameValue value="800" name="popUpHeight" />
+                </nameValues>
+                <request verb="Session.beginTransactionRq" />
+              </action>
+            </group>
+            <nameValues />
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="AdditionalOtherInterestsPage.ReadOnly" name="readOnly" />
+        </nameValues>
+      </page>
+      <page name="Endorsements" caption="Endorsements" pageVersion="2.0" validRef="False" inherited="DCT_ProductBase_1_0_0_0" prevPage="DeletedDriverAndVehicle" override="1">
+        <group object="Line" iterMax="*" iterStep="1">
+          <section direction="down" captionPosition="before" showCaption="once">
+            <group iterMax="*" iterStep="1" object="ManuScriptCoverage">
+              <tableLayout direction="across" captionPosition="above" showCaption="once" caption="Manuscript Endorsements">
+                <reference idref="ManuScriptCoverageInput.Description" />
+                <reference idref="ManuScriptCoverageInput.BaseRate" caption="Premium" />
+                <action command="delete" validRef="Endorsements.ShowDelete" caption="Remove">
+                  <nameValues />
+                </action>
+                <action command="markForDelete" caption="Remove" validRef="Endorsements.ShowMarkForDelete">
+                  <nameValues />
+                </action>
+              </tableLayout>
+              <action command="add" caption="Add Manuscript Endorsement" validRef="Endorsements.ShowAdd">
+                <nameValues />
+              </action>
+            </group>
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="Endorsements.ReadOnly" name="readOnly" />
+        </nameValues>
+      </page>
+      <page name="DriverHistory" pageVersion="2" prevPage="Driver" caption="Driver History" validRef="False" override="1">
+        <group iterMax="*" iterStep="1" object="Line">
+          <section direction="down" captionPosition="before" showCaption="repeat">
+            <section direction="across" captionPosition="before" showCaption="none" validRef="LinePrivate.AnyViolationsNo">
+              <reference idref="LineInputNonShredded.AnyViolationsQuestion" compute="1">
+                <nameValues>
+                  <nameValue idref="True" name="readOnly" />
+                </nameValues>
+              </reference>
+              <action command="goto" pageRef="ViolationDetail" topic="ViolationDetail" caption="Yes" preCommand="LinePrivate.SetAnyViolationsYes" displayType="hyperlink">
+                <nameValues>
+                  <nameValue value="1" name="popUp" />
+                </nameValues>
+              </action>
+            </section>
+            <section direction="down" captionPosition="before" showCaption="none" validRef="LinePrivate.AnyManualViolation" class="x_AlignRight">
+              <action command="custom" postCommand="LinePrivate.RemoveAllViolationsCheck" displayType="action" caption="Remove all manually entered incidents">
+                <nameValues />
+              </action>
+              <reference idref="Spacer" fldClass="x_Width550" />
+            </section>
+            <group iterMax="*" iterStep="1" object="Violation">
+              <grid direction="across" captionPosition="above" showCaption="once" readOnly="1" sort="1">
+                <reference idref="ViolationInput.DriverID" fldClass="x_Width200" />
+                <reference idref="ViolationInput.Category" fldClass="x_Width200" />
+                <reference idref="ViolationInput.Date" fldClass="x_Width100" />
+                <reference idref="ViolationInput.ReportedBy" fldClass="x_Width150" />
+                <reference idref="ViolationInput.Dispute">
+                  <nameValues>
+                    <nameValue idref="ViolationPrivate.IsReportedByNotMVR" name="eliminate" />
+                  </nameValues>
+                </reference>
+                <action command="delete" caption="Delete" validRef="ViolationPrivate.IsReportedByNotMVR">
+                  <nameValues />
+                </action>
+                <action command="specificIter" caption="Edit" pageRef="ViolationDetail" topic="ViolationDetail">
+                  <nameValues>
+                    <nameValue value="1" name="popUp" />
+                    <nameValue value="800" name="popUpWidth" />
+                    <nameValue value="800" name="popUpHeight" />
+                  </nameValues>
+                </action>
+              </grid>
+              <action command="add" caption="Add Incident" validRef="LineInputNonShredded.AnyViolations" pageRef="ViolationDetail" topic="ViolationDetail">
+                <nameValues>
+                  <nameValue value="1" name="popUp" />
+                </nameValues>
+              </action>
+            </group>
+            <nameValues />
+            <action command="goto" caption="Order MVR" pageRef="OrderMVR" topic="OrderMVR" validRef="MVRDataRequest.UseMVR">
+              <nameValues>
+                <nameValue value="1" name="popUp" />
+                <nameValue idref="MVRDataRequest.MVRManuscriptID" name="manuscript" />
+              </nameValues>
+            </action>
+            <action command="goto" caption="Match Incidents" validRef="LineInputNonShredded.AnyViolations" preCommand="ViolationMatching.MatchViolations" pageRef="ViolationMatchingDetail" topic="ViolationMatchingDetail">
+              <nameValues>
+                <nameValue value="1" name="popUp" />
+                <nameValue value="800" name="popUpWidth" />
+                <nameValue value="800" name="popUpHeight" />
+                <nameValue idref="MVRDataRequest.MVRManuscriptID" name="manuscript" />
+              </nameValues>
+            </action>
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="DriverHistoryPage.ReadOnly" name="readOnly" />
+        </nameValues>
+      </page>
+      <page name="Underwriting" pageVersion="2.0" validRef="False" override="1" prevPage="AdditionalOtherInterests" caption="Underwriting">
+        <group object="Policy" iterMax="*" iterStep="1">
+          <section direction="down" captionPosition="before" showCaption="repeat" cc="GrayPanel" icon="book_edit.png" caption="Underwriting">
+            <group iterMax="*" iterStep="1" object="Line">
+              <section direction="down" captionPosition="before" showCaption="repeat">
+                <section direction="down" captionPosition="before" showCaption="repeat" cc="lightPanel" capClass="x_Width400" collapsible="1">
+                  <reference idref="UnderwritingQuestions.CurrentlyHaveInsurance" onBlur="1" />
+                  <section direction="down" captionPosition="before" showCaption="repeat" validRef="UnderwritingQuestions.CurrentlyHaveInsurance" capClass="x_Width400">
+                    <reference idref="UnderwritingQuestions.TimeWithCurrentCompany" />
+                  </section>
+                  <reference idref="UnderwritingQuestions.HouseholdMemberInMilitary" compute="1" onBlur="1" />
+                  <section direction="down" captionPosition="before" showCaption="repeat" validRef="UnderwritingQuestions.HouseholdMemberInMilitary" cc="WhiteRounded">
+                    <group iterMax="*" iterStep="1" object="Driver">
+                      <tableLayout direction="across" captionPosition="before" showCaption="none" validRef="DriverPrivate.IsOccupationMilitary" readOnly="1">
+                        <reference idref="DriverOutput.Description" fldClass="x_FontSmall" />
+                      </tableLayout>
+                    </group>
+                    <nameValues />
+                  </section>
+                  <reference idref="UnderwritingQuestions.OtherLossesIncurred" />
+                  <nameValues>
+                    <nameValue value="Insured Information" name="toggleCaption" />
+                  </nameValues>
+                  <reference idref="UnderwritingQuestions.HealthInsuranceCovered" />
+                </section>
+                <reference idref="LinePrivate.CheckVehicleUnderwritingIndicators" compute="1" />
+                <section direction="down" captionPosition="before" showCaption="repeat" collapsible="1">
+                  <section direction="down" captionPosition="before" showCaption="repeat" capClass="x_Width400">
+                    <reference idref="UnderwritingQuestions.AgentInspectedVehicle" />
+                    <nameValues />
+                  </section>
+                  <reference idref="UnderwritingQuestions.CarParkedOnStreet" onBlur="1" capClass="x_Width400" />
+                  <section direction="down" captionPosition="before" showCaption="repeat" validRef="UnderwritingQuestions.CarParkedOnStreet" cc="WhiteRounded">
+                    <group iterMax="*" iterStep="1" object="Risk">
+                      <section direction="down" captionPosition="before" showCaption="repeat">
+                        <section direction="across" captionPosition="before" showCaption="none">
+                          <tableLayout direction="across" captionPosition="before" showCaption="none">
+                            <reference idref="VehicleInputUnderwriting.CarParkedOnTheStreet" compute="1" />
+                            <reference idref="VehicleOutputNonShredded.YearMakeModelDisplayShort" compute="1" />
+                          </tableLayout>
+                        </section>
+                      </section>
+                    </group>
+                  </section>
+                  <reference idref="UnderwritingQuestions.VehicleUsedInBusiness" onBlur="1" compute="1" capClass="x_Width400" />
+                  <section direction="down" captionPosition="before" showCaption="repeat" validRef="UnderwritingQuestions.VehicleUsedInBusiness" cc="WhiteRounded">
+                    <group iterMax="*" iterStep="1" object="Risk">
+                      <section direction="down" captionPosition="before" showCaption="repeat">
+                        <section direction="across" captionPosition="above" showCaption="none">
+                          <tableLayout direction="across" captionPosition="before" showCaption="none">
+                            <reference idref="VehicleInputUnderwriting.UsedForBusiness" compute="1" />
+                            <reference idref="VehicleOutputNonShredded.YearMakeModelDisplayShort" compute="1" />
+                          </tableLayout>
+                        </section>
+                      </section>
+                    </group>
+                  </section>
+                  <reference idref="UnderwritingQuestions.ExistingDamage" onBlur="1" capClass="x_Width400">
+                    <nameValues />
+                  </reference>
+                  <section direction="down" captionPosition="before" showCaption="repeat" validRef="UnderwritingQuestions.ExistingDamage" cc="WhiteRounded">
+                    <group iterMax="*" iterStep="1" object="Risk">
+                      <section direction="down" captionPosition="before" showCaption="repeat">
+                        <section direction="across" captionPosition="above" showCaption="none">
+                          <tableLayout direction="across" captionPosition="before" showCaption="none">
+                            <reference idref="VehicleInputUnderwriting.ExistingDamage" onBlur="1" caption=" " />
+                            <reference idref="VehicleOutputNonShredded.YearMakeModelDisplayShort" compute="1" caption="Vehicle" fldClass="x_Width225">
+                              <nameValues>
+                                <nameValue value="1" name="truncateField" />
+                              </nameValues>
+                            </reference>
+                          </tableLayout>
+                          <section direction="across" captionPosition="before" showCaption="none" validRef="VehicleInputUnderwriting.ExistingDamage">
+                            <reference idref="VehicleInputUnderwriting.ExistingDamageDescription" caption=" ">
+                              <nameValues>
+                                <nameValue value="Enter description of damage" name="watermark" />
+                              </nameValues>
+                            </reference>
+                          </section>
+                        </section>
+                      </section>
+                    </group>
+                    <nameValues />
+                  </section>
+                  <nameValues>
+                    <nameValue value="Vehicle Information" name="toggleCaption" />
+                  </nameValues>
+                </section>
+                <section direction="down" captionPosition="before" showCaption="repeat" collapsible="1">
+                  <reference idref="LinePrivate.CheckDriverUnderwritingIndicators" compute="1" />
+                  <section direction="down" captionPosition="before" showCaption="repeat" capClass="x_Width400">
+                    <reference idref="UnderwritingQuestions.AnySuspendedLicenses" onBlur="1" />
+                    <nameValues />
+                  </section>
+                  <section direction="down" captionPosition="before" showCaption="repeat" validRef="UnderwritingQuestions.AnySuspendedLicenses" cc="WhiteRounded">
+                    <group iterMax="*" iterStep="1" object="Driver">
+                      <section direction="down" captionPosition="before" showCaption="repeat">
+                        <section direction="across" captionPosition="before" showCaption="none">
+                          <tableLayout direction="across" captionPosition="above" showCaption="none">
+                            <reference idref="DriverInputUnderwriting.SuspendedIndicator" />
+                            <reference idref="DriverOutputNonShredded.Description" compute="1" />
+                          </tableLayout>
+                        </section>
+                      </section>
+                    </group>
+                  </section>
+                  <reference idref="UnderwritingQuestions.PhysicalMentalImpairment" capClass="x_Width400" onBlur="1" />
+                  <section direction="down" captionPosition="before" showCaption="repeat" validRef="UnderwritingQuestions.PhysicalMentalImpairment" cc="WhiteRounded">
+                    <group iterMax="*" iterStep="1" object="Driver">
+                      <section direction="down" captionPosition="before" showCaption="repeat">
+                        <section direction="across" captionPosition="before" showCaption="none">
+                          <tableLayout direction="across" captionPosition="before" showCaption="none">
+                            <reference idref="DriverInputUnderwriting.PhysicalOrMentalIndicator" />
+                            <reference idref="DriverOutputNonShredded.Description" />
+                          </tableLayout>
+                        </section>
+                      </section>
+                    </group>
+                  </section>
+                  <reference idref="UnderwritingQuestions.FinancialResponsibilityFiling" onBlur="1" capClass="x_Width400" />
+                  <section direction="down" captionPosition="before" showCaption="repeat" validRef="UnderwritingQuestions.FinancialResponsibilityFiling" cc="WhiteRounded">
+                    <group iterMax="*" iterStep="1" object="Driver">
+                      <section direction="down" captionPosition="before" showCaption="repeat">
+                        <section direction="across" captionPosition="before" showCaption="repeat" class="x_Width700">
+                          <tableLayout direction="across" captionPosition="before" showCaption="none" class="x_Width250">
+                            <reference idref="DriverInputUnderwriting.SR22Indicator" onBlur="1" caption=" ">
+                              <nameValues />
+                            </reference>
+                            <reference idref="DriverOutputNonShredded.Description" caption=" " compute="1" fldClass="x_Width225 x_TextAlignLeft" />
+                          </tableLayout>
+                          <tableLayout direction="across" captionPosition="before" showCaption="repeat" validRef="DriverInputUnderwriting.SR22Indicator" class="x_Width350">
+                            <reference idref="DriverInputUnderwriting.SR22Date" fldClass="x_Width100" />
+                            <reference idref="DriverInputUnderwriting.SR22Reason" caption=" " fldClass="x_InputWidth200">
+                              <nameValues>
+                                <nameValue value="Enter reason for filing" name="watermark" />
+                              </nameValues>
+                            </reference>
+                          </tableLayout>
+                        </section>
+                      </section>
+                    </group>
+                    <nameValues />
+                  </section>
+                  <section direction="down" captionPosition="before" showCaption="repeat" capClass="x_Width400">
+                    <reference idref="UnderwritingQuestions.CoverageCancelledInLast3Years" onBlur="1" />
+                  </section>
+                  <section direction="down" captionPosition="before" showCaption="repeat" validRef="UnderwritingQuestions.CoverageCancelledInLast3Years" cc="WhiteRounded">
+                    <group iterMax="*" iterStep="1" object="Driver">
+                      <section direction="down" captionPosition="before" showCaption="repeat">
+                        <tableLayout direction="across" captionPosition="above" showCaption="none">
+                          <section direction="across" captionPosition="before" showCaption="repeat" validRef="DriverInputUnderwriting.CoverageGapIndicator">
+                            <reference idref="DriverInputUnderwriting.CoverageGapReason" caption=" ">
+                              <nameValues>
+                                <nameValue value="Enter reason for coverage gap" name="watermark" />
+                              </nameValues>
+                            </reference>
+                          </section>
+                          <section direction="across" captionPosition="before" showCaption="none">
+                            <reference idref="DriverInputUnderwriting.CoverageGapIndicator" onBlur="1" />
+                            <reference idref="DriverOutputNonShredded.Description" compute="1" fldClass="x_Width300">
+                              <nameValues />
+                            </reference>
+                          </section>
+                        </tableLayout>
+                      </section>
+                    </group>
+                    <nameValues />
+                  </section>
+                  <nameValues>
+                    <nameValue value="Driver Information" name="toggleCaption" />
+                  </nameValues>
+                </section>
+              </section>
+            </group>
+            <tableLayout direction="across" captionPosition="before" showCaption="repeat" validRef="False">
+              <action command="custom" caption="Buy this policy" validRef="PolicyPrivate.ShowBuyThisPolicy">
+                <nameValues />
+              </action>
+            </tableLayout>
+            <nameValues />
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="UnderwritingPage.ReadOnly" name="readOnly" />
+        </nameValues>
+      </page>
+      <page pageVersion="2.0" name="Account" caption="Applicant" prevPage="" validRef="AccountPage.Show" override="1">
+        <group object="Account" iterMax="*" iterStep="1">
+          <section direction="down" captionPosition="before" showCaption="repeat">
+            <section direction="down" captionPosition="before" showCaption="repeat">
+              <section direction="down" captionPosition="before" showCaption="repeat">
+                <nameValues />
+                <section direction="down" captionPosition="before" showCaption="repeat" cc="GrayPanel">
+                  <section direction="across" captionPosition="above" showCaption="repeat" capClass="x_Width100">
+                    <reference idref="AccountInput.Prefix" capClass="x_Width50" />
+                    <reference idref="AccountInput.FirstName" capClass="x_Width125" fldClass="x_Width125" />
+                    <reference idref="AccountInput.MiddleName" caption="MI" fldClass="x_MiddleInitialField x_Width50" capClass="x_Width50" />
+                    <reference idref="AccountInput.LastName" capClass="x_Width125" fldClass="x_Width125" />
+                    <reference idref="AccountInput.Suffix" />
+                    <action command="custom" validRef="AccountPage.ManualPartySearch_Show" displayType="hyperlink">
+                      <nameValues>
+                        <nameValue value="partyStart:partySearch" name="postAction" />
+                        <nameValue value="Party Search" name="popUpTitle" />
+                        <nameValue value="800" name="popUpWidth" />
+                        <nameValue value="600" name="popUpHeight" />
+                        <nameValue value="loneIcon" name="type" />
+                        <nameValue value="magnifier.png" name="icon" />
+                        <nameValue value="Search" name="qtip" />
+                        <nameValue value="1" name="_performStoreData" />
+                        <nameValue value="1" name="popUp" />
+                        <nameValue value="1" name="hideCloseButton" />
+                        <nameValue value="partyAttach" name="PartyReturnAction" />
+                        <nameValue value="AccountPrivate.PartyImportAccountEmail" name="FieldsToExecuteOnSelect" />
+                      </nameValues>
+                    </action>
+                    <action command="custom" validRef="AccountPage.AutomaticPartySearch_Show" displayType="hyperlink">
+                      <nameValues>
+                        <nameValue value="partyStart:searchResults" name="postAction" />
+                        <nameValue value="Auto Search" name="popUpTitle" />
+                        <nameValue value="800" name="popUpWidth" />
+                        <nameValue value="500" name="popUpHeight" />
+                        <nameValue value="1" name="_performStoreData" />
+                        <nameValue value="_partyReturnAction,partyAttach,_mappingId,PartySearch" name="ExpressActionParameters" />
+                        <nameValue value="loneIcon" name="type" />
+                        <nameValue value="magnifier.png" name="icon" />
+                        <nameValue value="Search" name="qtip" />
+                        <nameValue value="1" name="popUp" />
+                        <nameValue value="1" name="hideCloseButton" />
+                      </nameValues>
+                    </action>
+                    <action command="custom" caption="Add co-applicant" validRef="False">
+                      <nameValues />
+                      <request verb="ManuScript.addObjectRecordRq">
+                        <nameValues>
+                          <nameValue idref="PolicyAdmin.PolicyManuScriptID" name="manuscript" dataType="attribute" />
+                          <nameValue value="Person" name="objectID" dataType="attribute" />
+                        </nameValues>
+                      </request>
+                    </action>
+                    <nameValues />
+                  </section>
+                  <section direction="across" captionPosition="above" showCaption="repeat" fldClass="x_Width90" capClass="x_Width120">
+                    <reference idref="PersonInput.BirthDate" />
+                    <reference idref="PersonInput.SSN" />
+                    <reference idref="PersonInput.MaritalStatus" />
+                    <reference idref="PersonInput.Occupation" />
+                  </section>
+                  <section direction="across" captionPosition="above" showCaption="repeat" capClass="x_Width120" fldClass="x_Width90">
+                    <reference idref="AccountInput.PrimaryPhone" caption="Primary Phone" />
+                    <reference idref="AccountInput.PrimaryPhoneType" />
+                    <reference idref="PersonInput.WorkPhone" />
+                  </section>
+                  <section direction="across" captionPosition="before" showCaption="repeat">
+                    <reference idref="AccountInput.Email" />
+                    <reference idref="AccountInput.EmailNotRequired" onBlur="1" />
+                  </section>
+                  <section direction="down" captionPosition="before" showCaption="repeat">
+                    <section direction="down" captionPosition="before" showCaption="repeat" class="x_BorderLightGray">
+                      <section direction="down" captionPosition="before" showCaption="repeat" capClass="x_Width90">
+                        <reference idref="AccountInput.Address1" onBlur="1">
+                          <nameValues>
+                            <nameValue idref="Geocode.AddressReadOnly" name="readOnly" />
+                          </nameValues>
+                        </reference>
+                        <reference idref="AccountInput.Address2">
+                          <nameValues>
+                            <nameValue idref="Geocode.AddressReadOnly" name="readOnly" />
+                          </nameValues>
+                        </reference>
+                      </section>
+                      <section direction="across" captionPosition="above" showCaption="repeat">
+                        <reference idref="AccountInput.City" caption="City:">
+                          <nameValues>
+                            <nameValue idref="Geocode.AddressReadOnly" name="readOnly" />
+                          </nameValues>
+                        </reference>
+                        <reference idref="AccountInput.State" onBlur="1">
+                          <nameValues>
+                            <nameValue idref="Geocode.AddressReadOnly" name="readOnly" />
+                          </nameValues>
+                        </reference>
+                        <reference idref="AccountInput.ZipCode" onBlur="1">
+                          <nameValues>
+                            <nameValue idref="Geocode.AddressReadOnly" name="readOnly" />
+                          </nameValues>
+                        </reference>
+                        <reference idref="AccountInput.County" compute="1">
+                          <nameValues />
+                        </reference>
+                        <section direction="across" captionPosition="above" showCaption="repeat" validRef="Geocode.IsVerified">
+                          <reference idref="AccountPBBI.Latitude" />
+                          <reference idref="AccountPBBI.Longitude" />
+                          <reference idref="Geocode.Confidence" />
+                        </section>
+                        <tableLayout direction="down" captionPosition="before" showCaption="none" validRef="PitneyBowesOutput.GeocodingEnabled" caption="Geocoding Status">
+                          <section direction="across" captionPosition="before" showCaption="repeat" class="x_Width600">
+                            <reference idref="Geocode.GeocodeStatusDisplay" compute="1" />
+                            <action command="custom" caption="Verify" pageRef="GeocodeResults" topic="Geocode" validRef="Geocode.ShowPBBIVerifyAddress" displayType="hyperlink">
+                              <nameValues>
+                                <nameValue value="integrationStart:integrationStart" name="postAction" />
+                                <nameValue value="1" name="popUp" />
+                                <nameValue value="Geocode Results" name="popUpTitle" />
+                                <nameValue value="800" name="popUpWidth" />
+                                <nameValue value="500" name="popUpHeight" />
+                                <nameValue value="1" name="hideCloseButton" />
+                                <nameValue value="Geocode.GeocodeRq" name="preEventField" />
+                                <nameValue value="PBBI Account Geocoding" name="MappingID" />
+                                <nameValue idref="PolicyAdmin.PolicyManuScriptID" name="CallingManuScriptID" />
+                                <nameValue value="Geocode.SetLastVerifiedToToday,UserInterface.StorePolicy" name="FieldsToExecuteOnSelect" />
+                                <nameValue idref="False" name="IsParentPopup" />
+                                <nameValue idref="AccountPrivate.ContextPath" name="ContextPath" />
+                                <nameValue idref="Geocode.ManuscriptID" name="manuscript" />
+                                <nameValue value="1" name="_performStoreData" />
+                                <nameValue idref="AccountOutput.ID" name="ImportContextPath" />
+                              </nameValues>
+                            </action>
+                            <action command="custom" caption="Edit verified address" validRef="Geocode.ShowPBBIEditAddress" displayType="hyperlink" preCommand="Geocode.ClearLastVerified" postCommand="UserInterface.StorePolicy" />
+                            <action command="custom" caption="View Map" validRef="InteractiveMap.ShowPBBIInteractiveMapLink" displayType="hyperlink">
+                              <nameValues>
+                                <nameValue value="hyperlink" name="type" />
+                                <nameValue value="InteractiveMap.ViewMapPreEvent" name="preEventField" />
+                                <nameValue idref="InteractiveMap.JavaScript" name="actionUrl" />
+                              </nameValues>
+                            </action>
+                          </section>
+                        </tableLayout>
+                      </section>
+                      <nameValues />
+                    </section>
+                    <nameValues />
+                  </section>
+                  <nameValues>
+                    <nameValue value="Primary Insured" name="panelHeader" />
+                  </nameValues>
+                  <section direction="down" captionPosition="before" showCaption="repeat">
+                    <reference idref="MailingAddressInfo.MailingAddressSame" capClass="x_Bold" onBlur="1" />
+                    <section direction="down" captionPosition="before" showCaption="repeat" validRef="PersonPrivate.ShowMailingAddress" cc="GrayPanel" startClosed="1">
+                      <section direction="down" captionPosition="above" showCaption="repeat">
+                        <reference idref="MailingAddressInfo.MailingAddress1" />
+                        <reference idref="MailingAddressInfo.MailingAddress2" />
+                      </section>
+                      <section direction="across" captionPosition="above" showCaption="repeat">
+                        <reference idref="MailingAddressInfo.MailingCity" />
+                        <reference idref="MailingAddressInfo.MailingState" />
+                        <reference idref="MailingAddressInfo.MailingZipcode" />
+                      </section>
+                      <nameValues>
+                        <nameValue value="Primary Insured Mailing Address" name="panelHeader" />
+                        <nameValue value="Primary Insured Mailing Address" name="toggleCaption" />
+                      </nameValues>
+                    </section>
+                  </section>
+                  <section direction="across" captionPosition="before" showCaption="repeat" class="x_BorderLightGray">
+                    <action command="custom" caption="Get Credit Score" displayType="action" validRef="CreditScore.ShowCreditScore">
+                      <nameValues>
+                        <nameValue value="CreditScore.GetCreditScore" name="preEventField" />
+                      </nameValues>
+                    </action>
+                    <section direction="across" captionPosition="before" showCaption="repeat" validRef="CreditScore.Executed" capClass="x_Width800">
+                      <reference idref="Spacer" caption="Policy premium may have been adjusted based on receipt of credit score" />
+                    </section>
+                  </section>
+                </section>
+                <section direction="across" captionPosition="before" showCaption="repeat" validRef="AccountPrivate.CoApplicantExists">
+                  <group iterMax="*" iterStep="1" object="Person" restriction="AccountPrivate.NonPrimaryInsuredXPath">
+                    <section direction="down" captionPosition="above" showCaption="repeat" cc="GrayPanel" startClosed="1">
+                      <section direction="down" captionPosition="above" showCaption="repeat" startClosed="1">
+                        <section direction="across" captionPosition="above" showCaption="repeat">
+                          <reference idref="PersonInput.FirstName" capClass="x_Width125" fldClass="x_Width125" />
+                          <reference idref="PersonInput.MiddleName" fldClass="x_MiddleInitialField x_Width50" caption="MI" capClass="x_Width50" />
+                          <reference idref="PersonInput.LastName" />
+                        </section>
+                        <section direction="across" captionPosition="before" showCaption="repeat" capClass="x_Width90" fldClass="x_Width90">
+                          <reference idref="PersonInput.BirthDate" />
+                          <reference idref="PersonInput.SSN" />
+                        </section>
+                        <section direction="across" captionPosition="before" showCaption="repeat" capClass="x_Width90" fldClass="x_Width90">
+                          <reference idref="PersonInput.MaritalStatus" />
+                          <reference idref="PersonInput.Occupation" />
+                        </section>
+                        <section direction="across" captionPosition="before" showCaption="repeat" capClass="x_Width90" fldClass="x_Width90">
+                          <reference idref="PersonInput.WorkPhone" />
+                          <reference idref="PersonInput.EmailAddress" />
+                        </section>
+                        <section direction="down" captionPosition="before" showCaption="repeat" capClass="x_Width90">
+                          <reference idref="PersonInput.RelationToApplicant" />
+                        </section>
+                        <nameValues>
+                          <nameValue value="Co-Applicant" name="toggleCaption" />
+                        </nameValues>
+                      </section>
+                      <section direction="down" captionPosition="before" showCaption="repeat">
+                        <reference idref="MailingAddressInfo.MailingAddressSame" capClass="x_Width375" onBlur="1" />
+                        <section direction="down" captionPosition="before" showCaption="repeat" cc="GrayPanel" validRef="PersonPrivate.ShowMailingAddress" startClosed="1">
+                          <section direction="down" captionPosition="above" showCaption="repeat">
+                            <reference idref="MailingAddressInfo.MailingAddress1" />
+                            <reference idref="MailingAddressInfo.MailingAddress2" />
+                          </section>
+                          <section direction="across" captionPosition="above" showCaption="repeat">
+                            <reference idref="MailingAddressInfo.MailingCity" />
+                            <reference idref="MailingAddressInfo.MailingState" />
+                            <reference idref="MailingAddressInfo.MailingZipcode" />
+                          </section>
+                          <nameValues>
+                            <nameValue value="Co-Applicant Mailing Address" name="panelHeader" />
+                            <nameValue value="Co-Applicant Mailing Address" name="toggleCaption" />
+                          </nameValues>
+                        </section>
+                      </section>
+                      <section direction="across" captionPosition="above" showCaption="repeat">
+                        <action command="delete" caption="Delete Co-applicant" displayType="action">
+                          <nameValues />
+                        </action>
+                      </section>
+                      <nameValues>
+                        <nameValue value="Co-Applicant" name="panelHeader" />
+                        <nameValue value="Co-applicant" name="toggleCaption" />
+                      </nameValues>
+                    </section>
+                  </group>
+                </section>
+              </section>
+              <section direction="down" captionPosition="before" showCaption="repeat">
+                <action command="custom" caption="Add co-applicant" validRef="AccountPage.ShowAddCoApplicantButton">
+                  <nameValues />
+                  <request verb="ManuScript.addObjectRecordRq">
+                    <nameValues>
+                      <nameValue idref="PolicyAdmin.PolicyManuScriptID" name="manuscript" dataType="attribute" />
+                      <nameValue value="Person" name="objectID" dataType="attribute" />
+                    </nameValues>
+                  </request>
+                </action>
+              </section>
+              <nameValues />
+            </section>
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="AccountPage.ReadOnly" name="readOnly" />
+          <nameValue value="1" name="usePartyMappings" />
+          <nameValue idref="False" name="calculate" />
+        </nameValues>
+      </page>
+      <page name="RiskSchedule" caption="Vehicle(s)" pageVersion="2.0" validRef="RiskSchedulePage.Show" override="1" prevPage="DriverHistory">
+        <group object="Line" iterStep="1" iterMax="*">
+          <section direction="across" captionPosition="before" showCaption="repeat">
+            <section direction="down" captionPosition="before" showCaption="repeat">
+              <section direction="across" captionPosition="before" showCaption="repeat" readOnly="1" actClass="x_FloatRight">
+                <action command="custom" caption="+ Add another vehicle" displayType="hyperlink" validRef="VehiclePrivate.ShowVehicleAdd" actClass="x_Italic x_AlignRight">
+                  <nameValues />
+                  <request verb="ManuScript.addObjectRecordRq">
+                    <nameValues>
+                      <nameValue idref="PolicyAdmin.PolicyManuScriptID" name="manuscript" dataType="attribute" />
+                      <nameValue value="Risk" name="objectID" dataType="attribute" />
+                    </nameValues>
+                  </request>
+                </action>
+              </section>
+              <group object="Risk" iterStep="1" iterMax="*" validRef="VehicleInput.Included">
+                <section direction="down" captionPosition="before" showCaption="repeat" tabs="1">
+                  <section direction="down" captionPosition="before" showCaption="repeat" tab="1" expandCondition="VehiclePrivate.DisplayCurrentIteration">
+                    <section direction="across" captionPosition="above" showCaption="repeat" actClass="x_FloatRight">
+                      <action command="markForDelete" displayType="hyperlink" caption="Delete Vehicle">
+                        <nameValues>
+                          <nameValue value="You are about to remove this vehicle from the quote. Do you wish to continue?" name="confirmText" />
+                          <nameValue value="gray" name="type" />
+                          <nameValue value="cross.png" name="icon" />
+                        </nameValues>
+                      </action>
+                    </section>
+                    <section direction="down" captionPosition="before" showCaption="repeat" class="x_RightAlignFieldCaptions">
+                      <section direction="across" captionPosition="before" showCaption="repeat" class="x_RightAlignFieldCaptions" validRef="False">
+                        <reference idref="Spacer" />
+                        <reference idref="Spacer" />
+                        <reference idref="VehicleInput.VIN" capClass="x_Width160:RightAlignFieldCaptions" />
+                        <action command="custom" caption="Lookup by VIN" validRef="True">
+                          <nameValues>
+                            <nameValue value="VINVerification_Risk.PreEventField" name="preEventField" />
+                            <nameValue idref="RiskPrivate.ContextPath" name="preEventFieldContext" />
+                          </nameValues>
+                        </action>
+                      </section>
+                      <section direction="down" captionPosition="before" showCaption="repeat" class="x_BottomBorderSeparator_Dashed">
+                        <reference idref="VehicleInput.Year" onBlur="1" />
+                        <reference idref="VehicleInput.Make" compute="0" onBlur="1" />
+                        <reference idref="VehicleInput.Model" compute="0" onBlur="1" />
+                        <reference idref="VehicleInput.Description" compute="0" />
+                      </section>
+                      <section direction="down" captionPosition="before" showCaption="repeat" class="x_BottomBorderSeparator_Dashed" validRef="False">
+                        <reference idref="VehicleOutput.AntiTheftDescription" compute="1" caption="Anti Theft Description:">
+                          <nameValues>
+                            <nameValue idref="True" name="readOnly" />
+                          </nameValues>
+                        </reference>
+                        <reference idref="VehicleInput.PassiveRestraint" />
+                        <reference idref="VehicleOutput.AntiLockBrakesDescription" compute="1" caption="Anti Lock Brake Description:">
+                          <nameValues>
+                            <nameValue idref="True" name="readOnly" />
+                          </nameValues>
+                        </reference>
+                        <reference idref="VehicleInput.DaytimeRunningLights" />
+                        <reference idref="VehicleInput.Airbags" />
+                        <reference idref="VehicleInput.BackupCamera" />
+                        <reference idref="VehicleOutput.PerformanceDescription" compute="1">
+                          <nameValues>
+                            <nameValue idref="True" name="readOnly" />
+                          </nameValues>
+                        </reference>
+                      </section>
+                    </section>
+                    <section direction="down" captionPosition="before" showCaption="repeat" class="x_RightAlignFieldCaptions">
+                      <section direction="across" captionPosition="before" showCaption="repeat" class="x_RightAlignFieldCaptions">
+                        <reference idref="RiskInput.LocationID" capClass="x_Width200" />
+                        <action command="goto" caption="Edit..." pageRef="Location" topic="Location" validRef="False">
+                          <nameValues />
+                        </action>
+                      </section>
+                      <reference idref="VehicleInput.Usage" onBlur="1" />
+                      <reference idref="VehicleInput.UsageBusinessTypeForHire">
+                        <nameValues>
+                          <nameValue idref="VehiclePrivate.HideForHire" name="eliminate" />
+                        </nameValues>
+                      </reference>
+                      <reference idref="VehicleInput.MilesToWork" compute="1">
+                        <nameValues>
+                          <nameValue idref="VehiclePrivate.HideMilesToWork" name="eliminate" />
+                        </nameValues>
+                      </reference>
+                      <reference idref="VehicleInput.AnnualMileage" />
+                      <reference idref="VehicleInput.FinancialStatus" onBlur="1" compute="1" />
+                      <section direction="down" captionPosition="before" showCaption="repeat" validRef="PolicyPrivate.IsNotQuote">
+                        <section direction="across" captionPosition="before" showCaption="repeat" validRef="VehiclePrivate.IsFinancialStatusOwnedOrLeased">
+                          <reference idref="Spacer" fldClass="x_Width50" />
+                          <reference idref="VehicleInput.FinanceLeasingCompany" compute="1" />
+                          <group iterMax="*" iterStep="1" object="AdditionalOtherInterest">
+                            <tableLayout direction="across" captionPosition="above" showCaption="once" />
+                            <action command="add" caption="Add Additional Interests" pageRef="AdditionalOtherInterestDetail" topic="AdditionalOtherInterestDetail" preCommand="AdditionalOtherInterestDetailPage.SetPageToVehicle">
+                              <nameValues>
+                                <nameValue value="1" name="popUp" />
+                              </nameValues>
+                            </action>
+                          </group>
+                        </section>
+                      </section>
+                      <reference idref="VehicleInput.AssignedDriver">
+                        <nameValues>
+                          <nameValue idref="DriverAssignment.AutomaticDriverAssignment" name="eliminate" />
+                        </nameValues>
+                      </reference>
+                    </section>
+                    <nameValues>
+                      <nameValue idref="VehicleOutputNonShredded.YearMakeModelDisplay" name="toggleCaption" />
+                    </nameValues>
+                  </section>
+                  <nameValues />
+                </section>
+              </group>
+              <nameValues />
+            </section>
+            <nameValues />
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="AllPage.ReadOnly" name="readOnly" />
+        </nameValues>
+      </page>
+      <page name="Coverage" caption="Pricing &amp; Coverage" pageVersion="2.0" validRef="CoveragePage.Show" override="1" prevPage="ClaimsHistory" worksheet="False" idref="ExecutePremiums.Value" calculate="2">
+        <group object="data" iterMax="*" iterStep="1">
+          <section direction="down" captionPosition="before" showCaption="repeat">
+            <group iterMax="*" iterStep="1" object="Policy">
+              <section direction="down" captionPosition="before" showCaption="repeat">
+                <group iterMax="*" iterStep="1" object="Line">
+                  <section direction="down" captionPosition="before" showCaption="none" cc="WhiteRounded" icon="coins.png" caption="Pricing">
+                    <section direction="down" captionPosition="above" showCaption="repeat">
+                      <nameValues />
+                      <tableLayout direction="across" captionPosition="above" showCaption="once" captionClass="x_BackgroundLightGray">
+                        <reference idref="Spacer" fldClass="x_Width5" />
+                        <reference idref="Spacer" caption="Coverage Package Options:" />
+                      </tableLayout>
+                      <section direction="across" captionPosition="before" showCaption="repeat">
+                        <section direction="down" captionPosition="before" showCaption="repeat" caption="Coverage Calculator" icon="calculator.png">
+                          <nameValues />
+                        </section>
+                      </section>
+                      <tableLayout direction="across" captionPosition="above" showCaption="none">
+                        <section direction="across" captionPosition="before" showCaption="repeat">
+                          <reference idref="CoveragePackageDefaults.SetCurrentValues" compute="1" />
+                          <widget widgetType="comparison" showCaption="repeat" widgetFormat="slider" idref="CoveragePackage.Value" affectedValueRef="data.TotalPremiumChange" onBlur="1" affectedRatingRef="CoveragePackage.Execute" formatMaskOverride="$???,???,???.00" widgetName=" " caption=" " restoreSession="1" class="x_PaddingBottom20 x_PaddingLeft10" />
+                        </section>
+                        <section direction="down" captionPosition="before" showCaption="repeat">
+                          <reference idref="Spacer" />
+                          <reference idref="PolicyPurePremiums.Premium" caption="Policy Premium (every six months):" capClass="x_Italic x_Bold x_Width150" fldClass="x_Bold" />
+                          <action command="goto" caption="Side-By-Side Comparison" pageRef="Shopping" topic="Shopping">
+                            <nameValues>
+                              <nameValue value="GenerateShopping.Value" name="preEventField" />
+                            </nameValues>
+                          </action>
+                        </section>
+                      </tableLayout>
+                    </section>
+                    <section direction="down" captionPosition="before" showCaption="repeat">
+                      <section direction="down" captionPosition="before" showCaption="repeat">
+                        <tableLayout direction="across" captionPosition="above" showCaption="repeat" caption="Policy Coverage" capClass="x_Width150 x_Bold x_BorderLightGray" fldClass="x_Width200 x_BorderLightGray">
+                          <reference idref="BodilyInjuryInput.Limit" onBlur="1" caption=" Bodily Injury">
+                            <nameValues />
+                          </reference>
+                          <reference idref="PropertyDamageInput.Limit" onBlur="1" caption="Property Damage">
+                            <nameValues />
+                          </reference>
+                          <nameValues>
+                            <nameValue idref="CoveragePackagePrivate.IsNotCustom" name="readOnly" />
+                          </nameValues>
+                          <reference idref="MedicalPaymentsInput.Limit" caption="Medical Payments" onBlur="1">
+                            <nameValues />
+                          </reference>
+                          <reference idref="UninsuredMotoristsInput.Limit" caption="Uninsured Motorists" onBlur="1">
+                            <nameValues />
+                          </reference>
+                          <reference idref="UnderInsuredMotoristsInput.Limit" onBlur="1" caption="Underinsured Motorists" />
+                        </tableLayout>
+                        <tableLayout direction="across" captionPosition="before" showCaption="repeat" class="x_BorderTop x_BorderBottom x_BackgroundLightGray x_MarginTop">
+                          <section direction="down" captionPosition="before" showCaption="repeat" capClass="x_Width250">
+                            <reference idref="PolicyInput.Homeowner" onBlur="1" capClass="x_Width300" />
+                          </section>
+                          <section direction="down" captionPosition="before" showCaption="repeat" validRef="Context.IsUnderwriter" capClass="x_Width150">
+                            <reference idref="LineInputNonShredded.ManualDriverAssignment" onBlur="1" compute="1" />
+                          </section>
+                        </tableLayout>
+                        <nameValues />
+                      </section>
+                    </section>
+                    <section direction="down" captionPosition="before" showCaption="repeat">
+                      <group iterMax="*" iterStep="1" object="Risk">
+                        <section direction="down" captionPosition="before" showCaption="repeat" caption="Vehicle Coverage">
+                          <section direction="down" captionPosition="before" showCaption="repeat" collapsible="1">
+                            <section direction="across" captionPosition="before" showCaption="repeat" class="x_BorderTop x_BorderBottom x_BackgroundLightGray">
+                              <reference idref="VehicleInput.AssignedDriver" caption="Assigned Driver" onBlur="1" fldClass="x_Width190" capClass="x_Width100" />
+                              <reference idref="VehicleInputNonShredded.LiabilityOnly" caption="Liability Only" capClass="x_Width80" compute="0" onBlur="1">
+                                <nameValues>
+                                  <nameValue idref="CoveragePackagePrivate.IsLiability" name="readOnly" />
+                                </nameValues>
+                              </reference>
+                            </section>
+                            <tableLayout direction="across" captionPosition="before" showCaption="repeat">
+                              <tableLayout direction="down" captionPosition="before" showCaption="repeat" readOnly="1" capClass="x_Width75" fldClass="x_Width75">
+                                <reference idref="BodilyInjurySubCoverageInput.Limit" caption="Bodily Injury">
+                                  <nameValues />
+                                </reference>
+                                <reference idref="PropertyDamageSubCoverageInput.Limit" caption="Property Damage">
+                                  <nameValues />
+                                </reference>
+                                <reference idref="MedicalPaymentsSubCoverageInput.Limit" caption="Medical">
+                                  <nameValues />
+                                </reference>
+                                <reference idref="UninsuredMotoristsSubCoverageInput.Limit" caption="Uninsured Motorist">
+                                  <nameValues />
+                                </reference>
+                                <reference idref="UnderInsuredMotoristsSubCoverageInput.Limit" />
+                              </tableLayout>
+                              <tableLayout direction="down" captionPosition="before" showCaption="none" fldClass="x_AlignRight x_Width50" class="x_Width50">
+                                <reference idref="BodilyInjurySubCoverageOutput.Premium" />
+                                <reference idref="PropertyDamageSubCoverageOutput.Premium" />
+                                <reference idref="MedicalPaymentsSubCoverageOutput.Premium" />
+                                <reference idref="UninsuredMotoristsSubCoverageOutput.Premium" />
+                                <reference idref="UnderInsuredMotoristsSubCoverageOutput.Premium" />
+                              </tableLayout>
+                              <tableLayout direction="down" captionPosition="before" showCaption="repeat" class="x_Width15">
+                                <reference idref="Spacer" />
+                              </tableLayout>
+                              <tableLayout direction="across" captionPosition="above" showCaption="repeat">
+                                <tableLayout direction="down" captionPosition="before" showCaption="repeat" capClass="x_Width80 x_Height20" fldClass="x_Height20" validRef="VehiclePrivate.LiabilityOnlyFalseAndCoveragePackageIsCustom">
+                                  <widget widgetType="comparison" showCaption="repeat" widgetFormat="extended" idref="OtherThanCollisionInput.Deductible" affectedValueRef="OtherThanCollisionOutput.Premium" caption="Comprehensive" onBlur="1">
+                                    <nameValues />
+                                  </widget>
+                                  <widget widgetType="comparison" showCaption="repeat" widgetFormat="extended" caption="Collision" idref="CollisionInput.Deductible" affectedValueRef="CollisionOutput.Premium" onBlur="1">
+                                    <nameValues />
+                                  </widget>
+                                  <widget widgetType="comparison" showCaption="repeat" widgetFormat="extended" idref="TowingAndLaborInput.Limit" affectedValueRef="TowingAndLaborOutput.Premium" caption="Towing" onBlur="1">
+                                    <nameValues />
+                                  </widget>
+                                  <widget widgetType="comparison" showCaption="repeat" widgetFormat="extended" idref="RentalReimbursementInput.Limit" affectedValueRef="RentalReimbursementOutput.Premium" caption="Rental" onBlur="1">
+                                    <nameValues />
+                                  </widget>
+                                  <nameValues />
+                                </tableLayout>
+                                <tableLayout direction="down" captionPosition="before" showCaption="repeat" capClass="x_Width80" fldClass="x_Width80" readOnly="1" validRef="VehiclePrivate.LiabilityOnlyOrCoveragePackageIsNotCustom">
+                                  <nameValues />
+                                  <reference idref="OtherThanCollisionInput.Deductible" caption="Comprehensive" />
+                                  <reference idref="CollisionInput.Deductible" caption="Collision" />
+                                  <reference idref="TowingAndLaborInput.Limit" caption="Towing" />
+                                  <reference idref="RentalReimbursementInput.Limit" caption="Rental" />
+                                </tableLayout>
+                                <tableLayout direction="down" captionPosition="before" showCaption="none">
+                                  <reference idref="OtherThanCollisionOutput.Premium" fldClass="x_AlignRight" />
+                                  <reference idref="CollisionOutput.Premium" fldClass="x_AlignRight" />
+                                  <reference idref="TowingAndLaborOutput.Premium" fldClass="x_AlignRight" />
+                                  <reference idref="RentalReimbursementOutput.Premium" fldClass="x_AlignRight" />
+                                </tableLayout>
+                              </tableLayout>
+                            </tableLayout>
+                            <nameValues>
+                              <nameValue idref="VehicleOutputNonShredded.YearMakeModelDisplay" name="toggleCaption" />
+                            </nameValues>
+                          </section>
+                          <nameValues />
+                        </section>
+                      </group>
+                      <nameValues />
+                    </section>
+                    <nameValues />
+                  </section>
+                </group>
+                <nameValues />
+              </section>
+            </group>
+            <nameValues />
+            <section direction="down" captionPosition="before" showCaption="repeat" caption="Forms" icon="page.png" cc="WhiteRounded" validRef="False">
+              <section direction="across" captionPosition="before" showCaption="repeat">
+                <reference idref="PolicyAdmin.UseDCTFormsAndMessages" onBlur="1" />
+                <action command="custom" validRef="PricingPage.ShowWorksheetButton" caption="Rating Worksheet">
+                  <nameValues>
+                    <nameValue value="printjob:Worksheet" name="PDFPage" />
+                    <nameValue idref="True" name="suppressRefresh" />
+                  </nameValues>
+                </action>
+                <action command="custom" caption="Quote Letter" validRef="PolicyPrivate.IsQuote">
+                  <nameValues>
+                    <nameValue value="printjob:Quote" name="PDFPage" />
+                    <nameValue idref="True" name="suppressRefresh" />
+                  </nameValues>
+                </action>
+                <action command="custom" caption="Application" validRef="PolicyPrivate.IsApplication">
+                  <nameValues>
+                    <nameValue value="printjob:Application" name="PDFPage" />
+                    <nameValue idref="True" name="suppressRefresh" />
+                  </nameValues>
+                </action>
+                <action command="custom" caption="View All Forms" validRef="PolicyAdmin.UseDCTFormsAndMessages">
+                  <nameValues>
+                    <nameValue value="previewAsyncPrintJob" name="postAction" />
+                    <nameValue idref="PrintingAndForms.PrintJobNames" name="printJob" />
+                    <nameValue idref="PolicyAdmin.PolicyManuScriptID" name="printJobManuScript" />
+                  </nameValues>
+                </action>
+              </section>
+              <nameValues />
+            </section>
+          </section>
+        </group>
+        <nameValues>
+          <nameValue idref="CoveragePage.ReadOnly" name="readOnly" />
+          <nameValue idref="True" name="calculate" />
+        </nameValues>
+      </page>
+    </topic>
+  </topics>
+</ManuScript>
