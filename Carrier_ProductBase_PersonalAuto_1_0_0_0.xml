@@ -37,7 +37,7 @@
           <caption value="Test Tarun" />
         </definition>
       </public>
-      <public id="data.DuckCReekTest" path="DuckCReekTest" type="string">
+      <public id="data.DuckCReekTest11" path="DuckCReekTest11" type="string">
         <definition>
           <caption value="Duck C Reek Test" />
         </definition>
